@@ -22,6 +22,7 @@ public:
 	void handleFailure(const std::string& failedNodeAddress);
 	void uploadFile(const std::string& filename);
 	void downloadFile(const std::string& filename);
+	void listFiles();
 };
 
 #endif // NODE_H

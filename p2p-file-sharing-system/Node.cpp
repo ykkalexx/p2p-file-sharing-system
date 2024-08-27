@@ -173,3 +173,16 @@ void Node::downloadFile(const std::string& filename) {
     std::cout << "File " << filename << " downloaded from node " << nodeAddress << std::endl;
     closesocket(socket);
 }
+
+void Node::listFiles() {
+    std::vector<std::pair<std::string, std::string>> files = dht.getAllEntries();
+    if (files.empty()) {
+        std::cout << "No files found in the network." << std::endl;
+    }
+    else {
+        std::cout << "Files in the network:" << std::endl;
+        for (const auto& file : files) {
+            std::cout << "  " << file.first << " (stored at " << file.second << ")" << std::endl;
+        }
+    }
+}
