@@ -21,9 +21,21 @@
     <ClCompile Include="Netowrk.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="DHT.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Node.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Netowrk.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DHT.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Node.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
