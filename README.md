@@ -25,17 +25,15 @@ A decentralized file-sharing system built in C++ using peer-to-peer networking a
     cd peer2peer-file-sharing-system
     ```
 
-2. Build the project:
+2. Open the project in Visual Studio:
 
-    ```bash
-    make
-    ```
+    - Launch Visual Studio.
+    - Select `File` > `Open` > `Project/Solution`.
+    - Navigate to the cloned repository and open the `.sln` file.
 
-3. Run the system:
+3. Build the project:
 
-    ```bash
-    ./p2p-file-sharing
-    ```
+    - In Visual Studio, go to `Build` > `Build Solution` (or press `Ctrl+Shift+B`).
 
 ## Usage
 
