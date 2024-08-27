@@ -2,6 +2,7 @@
 #include <iostream>
 #include <thread>
 #include <sstream>
+#include <filesystem>
 
 void CLIUi() {
     std::cout << "Commands:\n";

@@ -128,9 +128,18 @@ void Node::handleFailure(const std::string& failedNodeAddress) {
 }
 
 void Node::uploadFile(const std::string& filename) {
+    // Check if the file exists
+    std::ifstream inFile(filename, std::ios::binary);
+    if (!inFile) {
+        std::cerr << "File " << filename << " does not exist." << std::endl;
+        return;
+    }
+
+    // Add file to DHT
     dht.addFile(filename, address);
     std::cout << "File " << filename << " uploaded to DHT" << std::endl;
 
+    // Notify other nodes about the new file
     std::vector<std::pair<std::string, std::string>> knownNodes = dht.getAllEntries();
     for (const auto& nodeEntry : knownNodes) {
         const std::string& nodeAddress = nodeEntry.second;
