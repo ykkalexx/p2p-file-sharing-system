@@ -4,6 +4,7 @@
 #include <thread>
 #include <chrono>
 #include <sstream>
+#include <vector>
 
 Node::Node(const std::string& address, int port) : address(address), port(port) {}
 
@@ -72,6 +73,21 @@ void Node::handleClient(SOCKET clientSocket) {
         network.SendData(clientSocket, fileData);
         std::cout << "File " << filename << " sent to client" << std::endl;
     }
+    else if (command == "SEARCH") {
+        std::string keyword;
+        iss >> keyword;
+        std::cout << "Search request for keyword: " << keyword << std::endl;
+        handleSearchRequest(clientSocket, keyword);
+    }
+    else if (command == "SEARCH_RESULT") {
+        std::string filename, nodeAddress;
+        iss >> filename >> nodeAddress;
+        std::cout << "Search result received: " << filename << " from node " << nodeAddress << std::endl;
+        handleSearchResponse(filename, nodeAddress);
+	}
+	else if (command == "SEARCH_RESULT_NOT_FOUND") {
+		std::cout << "Search result not found" << std::endl;
+	}
 
     closesocket(clientSocket);
 }
@@ -194,4 +210,47 @@ void Node::listFiles() {
             std::cout << "  " << file.first << " (stored at " << file.second << ")" << std::endl;
         }
     }
+}
+
+void Node::searchFile(const std::string& keyword) {
+    std::cout << "Initiating search for keyword: " << keyword << std::endl;
+    std::vector<std::pair<std::string, std::string>> knownNodes = dht.getAllEntries();
+    bool fileFound = false;
+
+    for (const auto& nodeEntry : knownNodes) {
+        const std::string& nodeAddress = nodeEntry.second;
+
+        SOCKET socket = network.createSocket();
+        if (network.ConnectingToServer(socket, nodeAddress, 8080)) {
+            network.SendData(socket, "SEARCH " + keyword);
+            closesocket(socket);
+        }
+        else {
+            std::cerr << "Failed to connect to node: " << nodeAddress << std::endl;
+        }
+    }
+
+    if (!fileFound) {
+        std::cout << "File not found for keyword: " << keyword << std::endl;
+    }
+}
+
+void Node::handleSearchRequest(SOCKET clientSocket, const std::string& keyword) {
+    std::vector<std::pair<std::string, std::string>> files = dht.getAllEntries();
+    bool fileFound = false;
+
+    for (const auto& file : files) {
+        if (file.first.find(keyword) != std::string::npos) {
+            fileFound = true;
+            network.SendData(clientSocket, "SEARCH_RESULT " + file.first + " " + address);
+        }
+    }
+
+    if (!fileFound) {
+        network.SendData(clientSocket, "SEARCH_RESULT_NOT_FOUND");
+    }
+}
+
+void Node::handleSearchResponse(const std::string& filename, const std::string& nodeAddress) {
+    std::cout << "File found: " << filename << " at node " << nodeAddress << std::endl;
 }

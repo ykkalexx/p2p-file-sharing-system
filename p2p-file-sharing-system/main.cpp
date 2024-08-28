@@ -11,6 +11,7 @@ void CLIUi() {
     std::cout << "  upload <filename>\n";
     std::cout << "  download <filename>\n";
     std::cout << "  list\n";
+    std::cout << "  search\n";
     std::cout << "  exit\n";
 }
 
@@ -52,6 +53,12 @@ int main() {
             node.leaveNetwork();
             break;
         }
+		else if (cmd == "search") {
+            std::string keyword;
+            std::cout << "Enter keyword: ";
+            std::getline(std::cin, keyword);
+            node.searchFile(keyword);
+		}
         else {
             CLIUi();
         }

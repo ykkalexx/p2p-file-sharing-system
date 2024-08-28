@@ -23,6 +23,9 @@ public:
 	void uploadFile(const std::string& filename);
 	void downloadFile(const std::string& filename);
 	void listFiles();
+	void searchFile(const std::string &keyword);
+	void handleSearchRequest(SOCKET clientSocket, const std::string &keyword);
+	void handleSearchResponse(const std::string& filename, const std::string& nodeAddress);
 };
 
 #endif // NODE_H
