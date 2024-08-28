@@ -21,8 +21,7 @@ A decentralized file-sharing system built in C++ using peer-to-peer networking a
 1. Clone the repository:
 
    ```bash
-    git clone https://github.com/your-username/peer2peer-file-sharing-system.git
-    cd peer2peer-file-sharing-system
+    git clone https://github.com/ykkalexx/p2p-file-sharing-system
     ```
 
 2. Open the project in Visual Studio:
