@@ -3,6 +3,8 @@
 #include <thread>
 #include <sstream>
 #include <filesystem>
+#include <vector>
+#include <algorithm>
 
 void CLIUi() {
     std::cout << "Commands:\n";
@@ -11,8 +13,18 @@ void CLIUi() {
     std::cout << "  upload <filename>\n";
     std::cout << "  download <filename>\n";
     std::cout << "  list\n";
-    std::cout << "  search\n";
+    std::cout << "  search <keyword>\n";
+    std::cout << "  help\n";
+    std::cout << "  clear\n";
     std::cout << "  exit\n";
+}
+
+void clearScreen() {
+#ifdef _WIN32
+    system("cls");
+#else
+    system("clear");
+#endif
 }
 
 int main() {
@@ -31,7 +43,12 @@ int main() {
         if (cmd == "join") {
             std::string networkAddress;
             iss >> networkAddress;
-            node.joinNetwork(networkAddress);
+            if (networkAddress.empty()) {
+                std::cerr << "Error: Network address is required.\n";
+            }
+            else {
+                node.joinNetwork(networkAddress);
+            }
         }
         else if (cmd == "leave") {
             node.leaveNetwork();
@@ -39,27 +56,51 @@ int main() {
         else if (cmd == "upload") {
             std::string filename;
             iss >> filename;
-            node.uploadFile(filename);
+            if (filename.empty()) {
+                std::cerr << "Error: Filename is required.\n";
+            }
+            else if (!std::filesystem::exists(filename)) {
+                std::cerr << "Error: File does not exist.\n";
+            }
+            else {
+                node.uploadFile(filename);
+            }
         }
         else if (cmd == "download") {
             std::string filename;
             iss >> filename;
-            node.downloadFile(filename);
+            if (filename.empty()) {
+                std::cerr << "Error: Filename is required.\n";
+            }
+            else {
+                node.downloadFile(filename);
+            }
         }
         else if (cmd == "list") {
             node.listFiles();
+        }
+        else if (cmd == "search") {
+            std::string keyword;
+            iss >> keyword;
+            if (keyword.empty()) {
+                std::cerr << "Error: Keyword is required.\n";
+            }
+            else {
+                node.searchFile(keyword);
+            }
+        }
+        else if (cmd == "help") {
+            CLIUi();
+        }
+        else if (cmd == "clear") {
+            clearScreen();
         }
         else if (cmd == "exit") {
             node.leaveNetwork();
             break;
         }
-		else if (cmd == "search") {
-            std::string keyword;
-            std::cout << "Enter keyword: ";
-            std::getline(std::cin, keyword);
-            node.searchFile(keyword);
-		}
         else {
+            std::cerr << "Error: Unknown command.\n";
             CLIUi();
         }
     }
